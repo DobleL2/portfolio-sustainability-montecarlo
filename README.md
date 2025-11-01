@@ -258,8 +258,6 @@ Este proyecto es de uso educativo/académico.
 
 **Luis Lapo, Cristian Ojeda**
 
-Trabajo Grupal 1 – Matemática Actuarial
-
 ## 📚 Referencias
 
 - Datos financieros: Yahoo Finance
