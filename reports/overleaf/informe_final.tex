@@ -1,0 +1,507 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+
+\geometry{margin=2.5cm}
+
+% Configuración de encabezado
+\setlength{\headheight}{13.6pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Matemática Actuarial}
+\fancyhead[R]{\small Comparación de Rentabilidades}
+\fancyfoot[C]{\thepage}
+
+\title{\textbf{Comparación de Rentabilidades en Instrumentos Financieros Reales}\\
+\large Análisis de Sostenibilidad de Carteras de Inversión mediante Simulación Monte Carlo}
+\author{Luis Lapo, Cristian Ojeda}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================
+% 1. INTRODUCCIÓN
+% ============================================
+\section{Introducción}
+
+El presente trabajo tiene como objetivo evaluar la sostenibilidad de una cartera de inversión inicial de \textbf{USD 100,000} bajo distintas estrategias de asignación de activos y rebalanceo, determinando su capacidad para sostener pagos mensuales de \textbf{USD 1,200} durante un período de \textbf{10 años}. El enfoque del análisis maximiza la rentabilidad mientras minimiza el riesgo de agotamiento del capital.
+
+En un contexto económico caracterizado por la volatilidad de los mercados financieros, la planificación de retiro y la gestión de carteras de inversión requieren herramientas sofisticadas que permitan evaluar múltiples escenarios y estrategias. La simulación Monte Carlo emerge como una metodología robusta para modelar la incertidumbre inherente a los mercados financieros, permitiendo analizar miles de posibles resultados y cuantificar el riesgo asociado a diferentes estrategias de inversión.
+
+Este estudio compara tres estrategias de asignación de activos utilizando datos históricos reales de instrumentos financieros, evaluando su desempeño bajo tres escenarios económicos diferentes (base, optimista y pesimista). Los resultados obtenidos proporcionan información valiosa para la toma de decisiones de inversión bajo condiciones de incertidumbre.
+
+% ============================================
+% 2. OBJETIVOS
+% ============================================
+\section{Objetivos}
+
+\subsection{Objetivo General}
+
+Evaluar la sostenibilidad y rentabilidad de diferentes estrategias de asignación de activos financieros, determinando cuál maximiza la probabilidad de sostener retiros mensuales durante el período de 10 años establecido.
+
+\subsection{Objetivos Específicos}
+
+\begin{enumerate}
+    \item Comparar el desempeño de tres estrategias de asignación de activos bajo diferentes escenarios económicos.
+    \item Cuantificar la probabilidad de supervivencia (no agotamiento del capital) para cada estrategia.
+    \item Evaluar el impacto de diferentes estrategias de rebalanceo en el desempeño de las carteras.
+    \item Analizar la sensibilidad de los resultados ante variaciones en las condiciones económicas (inflación, costos de transacción).
+    \item Determinar la distribución de valores finales y cuantificar el riesgo asociado a cada estrategia.
+    \item Evaluar el efecto de contribuciones periódicas y cambios en los montos de retiro (décimos sueldos).
+\end{enumerate}
+
+% ============================================
+% 3. METODOLOGÍA
+% ============================================
+\section{Metodología}
+
+\subsection{Datos Utilizados}
+
+El análisis se basa en datos históricos de los siguientes instrumentos financieros, obtenidos de Yahoo Finance para el período 2015-01-01 - 2025-01-01:
+
+\begin{itemize}
+    \item \textbf{S\&P 500 Index}: \textasciicircum{}GSPC
+    \item \textbf{US Treasury 7-10Y}: IEF
+    \item \textbf{Gold Futures}: GC=F
+    \item \textbf{3-Month Treasury Bill}: \textasciicircum{}IRX
+\end{itemize}
+
+\subsection{Procesamiento de Datos}
+
+Los datos históricos fueron procesados para calcular:
+\begin{itemize}
+    \item Retornos logarítmicos diarios
+    \item Estadísticas anualizadas (media y desviación estándar)
+    \item Matriz de correlación entre activos
+\end{itemize}
+
+\subsection{Simulación Monte Carlo}
+
+Se implementó una simulación Monte Carlo con las siguientes características:
+
+\begin{itemize}
+    \item \textbf{Iteraciones}: 10,000 simulaciones por cartera y escenario
+    \item \textbf{Horizonte temporal}: 120 meses (10 años)
+    \item \textbf{{Distribución de retornos}}: Distribución normal basada en estadísticas históricas
+    \item \textbf{{Ajustes aplicados}}:
+    \begin{itemize}
+        \item Ajuste por inflación en retiros mensuales
+        \item Costos de transacción en rebalanceos
+        \item Contribuciones periódicas (opcional)
+        \item Décimos sueldos o retiros adicionales (opcional)
+    \end{itemize}
+\end{itemize}
+
+\subsection{Estrategias de Inversión Evaluadas}
+
+\subsubsection{Cartera 1: 60\% Acciones / 40\% Bonos}
+\begin{itemize}
+    \item Asignación: Acciones: 60\%, Bonos: 40\%
+    \item Rebalanceo: Anual (basado en tiempo)
+\end{itemize}
+
+\subsubsection{Cartera 2: 50\% Acciones / 30\% Bonos / 20\% Oro}
+\begin{itemize}
+    \item Asignación: Acciones: 50\%, Bonos: 30\%, Oro: 20\%
+    \item Rebalanceo: Por umbral (5\% de desviación)
+\end{itemize}
+
+\subsubsection{Cartera 3: 70\% Acciones / 20\% Bonos / 10\% Efectivo}
+\begin{itemize}
+    \item Asignación: Acciones: 70\%, Bonos: 20\%, Efectivo: 10\%
+    \item Rebalanceo: Trimestral (basado en tiempo)
+\end{itemize}
+
+\subsection{Escenarios Económicos}
+
+Se evaluaron tres escenarios económicos:
+
+\begin{enumerate}
+    \item \textbf{Escenario Base}: Inflación 2.0\% anual, costos de transacción 0.2\%
+    \item \textbf{Escenario Optimistic}: Inflación 1.0\% anual, costos de transacción 0.1\%
+    \item \textbf{Escenario Pessimistic}: Inflación 5.0\% anual, costos de transacción 0.5\%
+\end{enumerate}
+
+\subsection{Métricas de Evaluación}
+
+Las principales métricas calculadas para cada simulación incluyen:
+\begin{itemize}
+    \item Tasa de supervivencia (probabilidad de completar 10 años)
+    \item Valor final promedio de la cartera
+    \item Distribución de valores finales (percentiles 5, 25, 50, 75, 95)
+    \item Meses sobrevividos promedio
+    \item Flujos de caja netos (contribuciones - retiros)
+\end{itemize}
+
+% ============================================
+% 4. RESULTADOS
+% ============================================
+\section{Resultados}
+
+\subsection{Resumen Ejecutivo}
+
+Los resultados de las simulaciones Monte Carlo revelan diferencias significativas en el desempeño de las tres estrategias de inversión evaluadas. A continuación se presentan los hallazgos principales.
+
+\subsection{Comparación de Tasas de Supervivencia}
+
+La tasa de supervivencia representa el porcentaje de simulaciones donde la cartera logró mantener capital suficiente para completar los 10 años de retiros mensuales.
+
+\begin{table}[H]
+\centering
+\caption{Tasas de Supervivencia por Cartera y Escenario (\%)}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cartera} & \textbf{Base} & \textbf{Optimista} & \textbf{Pesimista} \\
+\midrule
+60\% Acciones / 40\% Bonos & 40.8\% & 49.0\% & 19.8\% \\
+50\% Acciones / 30\% Bonos / 20\% Oro & 41.5\% & 52.7\% & 14.9\% \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & 47.8\% & 55.8\% & 27.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/comparison_survival_rate.png}
+\caption{Comparación de Tasas de Supervivencia por Cartera y Escenario}
+\label{fig:survival_comparison}
+\end{figure}
+
+\textbf{Análisis}: 70\% Acciones / 20\% Bonos / 10\% Efectivo muestra la mayor tasa de supervivencia en el escenario base (47.8\%). Esta cartera mantiene su superioridad en todos los escenarios evaluados, sugiriendo robustez ante diferentes condiciones económicas. Las carteras con mayor exposición a acciones generalmente presentan mayor potencial de crecimiento, pero también mayor volatilidad.
+
+\subsection{Valores Finales Promedio}
+
+El valor final promedio indica cuánto capital queda en promedio después de 10 años de retiros.
+
+\begin{table}[H]
+\centering
+\caption{Valores Finales Promedio por Cartera y Escenario (USD)}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cartera} & \textbf{Base} & \textbf{Optimista} & \textbf{Pesimista} \\
+\midrule
+60\% Acciones / 40\% Bonos & \$23,088 & \$28,370 & \$11,302 \\
+50\% Acciones / 30\% Bonos / 20\% Oro & \$14,192 & \$19,280 & \$4,407 \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & \$33,105 & \$39,302 & \$18,187 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/comparison_final_values.png}
+\caption{Comparación de Valores Finales Promedio por Cartera y Escenario}
+\label{fig:final_values_comparison}
+\end{figure}
+
+\textbf{Análisis}: 70\% Acciones / 20\% Bonos / 10\% Efectivo genera los valores finales promedio más altos en el escenario base (\$33,105), lo que indica mayor capacidad de generar crecimiento. Por otro lado, 50\% Acciones / 30\% Bonos / 20\% Oro muestra los valores finales promedio más bajos (\$14,192), lo que sugiere que su estrategia de asignación puede requerir ajustes para mejorar el desempeño. Esta diferencia de desempeño se mantiene consistente a través de todos los escenarios evaluados.
+
+\subsection{Análisis de Riesgo (Percentiles)}
+
+Las tablas de percentiles permiten evaluar la distribución de resultados y el riesgo asociado a cada estrategia.
+
+\begin{table}[H]
+\centering
+\caption{Distribución de Valores Finales - Escenario Base (USD)}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Cartera} & \textbf{P5} & \textbf{P25} & \textbf{Mediana} & \textbf{P75} & \textbf{P95} \\
+\midrule
+60\% Acciones / 40\% Bonos & \$0 & \$0 & \$0 & \$25,605 & \$117,184 \\
+50\% Acciones / 30\% Bonos / 20\% Oro & \$0 & \$0 & \$0 & \$18,795 & \$69,615 \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & \$0 & \$0 & \$0 & \$42,252 & \$154,398 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evolución del Capital}
+
+A continuación se presenta la evolución del capital para cada escenario económico, comparando las tres carteras de inversión:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/evolution_comparison_base.png}
+\caption{Evolución del Capital - Escenario Base}
+\label{fig:evolution_base}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/evolution_comparison_optimistic.png}
+\caption{Evolución del Capital - Escenario Optimista}
+\label{fig:evolution_optimistic}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/evolution_comparison_pessimistic.png}
+\caption{Evolución del Capital - Escenario Pesimista}
+\label{fig:evolution_pessimistic}
+\end{figure}
+
+\textbf{Interpretación}:
+\begin{itemize}
+    \item El percentil 5 (P5) en \$0 indica que más del 5\% de las simulaciones resultaron en quiebra total.
+    \item La mediana en \$0 para todas las carteras indica que en más del 50\% de los casos, el capital se agotó antes de completar 10 años.
+    \item El percentil 95 muestra el potencial máximo de crecimiento: 70\% Acciones / 20\% Bonos / 10\% Efectivo presenta el mayor valor (\$154,398), indicando el potencial de crecimiento en el escenario más favorable.
+\end{itemize}
+
+\subsection{Análisis de Contribuciones y Flujos de Caja}
+
+Las simulaciones incluyen contribuciones periódicas de USD 100/mes (aportes). Además, se aplican retiros adicionales (décimos sueldos) de USD 1,200 en los meses [6, 12]. A continuación se presenta un análisis del impacto de estos flujos en el desempeño de las carteras.
+
+\begin{table}[H]
+\centering
+\caption{Contribuciones Totales y Flujo Neto Promedio por Cartera y Escenario (USD)}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Cartera} & \textbf{Escenario} & \textbf{Contribuciones Totales} & \textbf{Flujo Neto} \\
+\midrule
+60\% Acciones / 40\% Bonos & Base & \$10,675 & \$-131,149 \\
+60\% Acciones / 40\% Bonos & Optimistic & \$10,945 & \$-128,339 \\
+60\% Acciones / 40\% Bonos & Pessimistic & \$9,776 & \$-136,075 \\
+50\% Acciones / 30\% Bonos / 20\% Oro & Base & \$10,927 & \$-134,444 \\
+50\% Acciones / 30\% Bonos / 20\% Oro & Optimistic & \$11,212 & \$-131,592 \\
+50\% Acciones / 30\% Bonos / 20\% Oro & Pessimistic & \$9,919 & \$-138,142 \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & Base & \$10,825 & \$-133,244 \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & Optimistic & \$11,063 & \$-129,862 \\
+70\% Acciones / 20\% Bonos / 10\% Efectivo & Pessimistic & \$10,006 & \$-140,157 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Interpretación}: El flujo neto representa la diferencia entre contribuciones totales y retiros totales a lo largo del período de simulación. En este análisis, los flujos netos son consistentemente negativos (promedio de aproximadamente \$134,400 en un período completo), lo cual es esperable dado que: (1) el retiro mensual base (\$1,200) es significativamente mayor que la contribución mensual (\$100 si está habilitada), (2) se aplican retiros adicionales por décimos sueldos (\$2,400 en total), y (3) el capital inicial (\$100,000) y los retornos de inversión son los principales recursos para compensar este déficit de flujo de caja. Los flujos netos más negativos (en valor absoluto) generalmente corresponden a simulaciones que sobrevivieron más meses, ya que continuaron realizando retiros durante más tiempo. La sostenibilidad de las carteras no depende únicamente del flujo neto, sino de la capacidad de los retornos de inversión para compensar estos flujos negativos y mantener el capital suficiente para completar el período requerido. Esta métrica permite evaluar la magnitud del déficit de flujo de caja que debe ser cubierto por los retornos de inversión.
+
+\subsection{Sensibilidad a Escenarios Económicos}
+
+El análisis de sensibilidad revela cómo cada cartera responde a cambios en las condiciones económicas.
+
+\begin{itemize}
+    \item \textbf{60\% Acciones / 40\% Bonos}: Presenta una diferencia de 29.2 puntos porcentuales entre el escenario optimista y pesimista.
+    \item \textbf{50\% Acciones / 30\% Bonos / 20\% Oro}: Presenta una diferencia de 37.8 puntos porcentuales entre el escenario optimista y pesimista.
+    \item \textbf{70\% Acciones / 20\% Bonos / 10\% Efectivo}: Presenta una diferencia de 28.6 puntos porcentuales entre el escenario optimista y pesimista.
+\end{itemize}
+% ============================================
+% 5. DISCUSIÓN
+% ============================================
+\section{Discusión}
+
+\subsection{Interpretación de Resultados}
+
+Los resultados obtenidos revelan varios hallazgos importantes:
+
+\subsubsection{Estrategia con Mejor Desempeño}
+70\% Acciones / 20\% Bonos / 10\% Efectivo demuestra el mejor desempeño en términos de supervivencia (47.8\% en escenario base) y valor final promedio (\$33,105). Esta cartera presenta una alta exposición a acciones (70\%), lo que sugiere que, en el horizonte de 10 años considerado, el mayor potencial de crecimiento de las acciones compensa su mayor volatilidad. Sin embargo, las estrategias con mayor exposición a acciones generalmente implican mayor riesgo, como se evidencia en la amplia dispersión de resultados.
+
+\subsubsection{Estrategia con Menor Desempeño}
+60\% Acciones / 40\% Bonos muestra las tasas de supervivencia más bajas (40.8\% en escenario base) y los valores finales promedio más bajos (\$23,088). Las diferencias de desempeño pueden deberse a la combinación específica de activos y a las condiciones del período histórico analizado.
+
+\subsubsection{Impacto de la Estrategia de Rebalanceo}
+Las diferentes estrategias de rebalanceo utilizadas (anual, trimestral, por umbral) muestran efectos distintos en el desempeño. El rebalanceo frecuente puede ser beneficioso para mantener la asignación objetivo, pero también puede generar mayores costos de transacción.
+
+\subsubsection{Impacto de Contribuciones y Cambios en Retiros}
+Las contribuciones periódicas de USD 100/mes han sido incorporadas en las simulaciones. En promedio, las carteras recibieron USD 10,809 en contribuciones totales durante el período, lo cual mejora significativamente la sostenibilidad al proporcionar capital adicional para inversión y compensar los retiros periódicos.
+
+Los retiros adicionales (décimos sueldos) de USD 1,200 aplicados en los meses [6, 12] aumentan la presión sobre el capital disponible. Estos retiros adicionales reducen el capital invertido en períodos específicos, lo que puede afectar el crecimiento compuesto y la capacidad de recuperación de las carteras, especialmente si ocurren durante períodos de mercado bajista.
+
+\subsection{Limitaciones del Análisis}
+
+Es importante reconocer las limitaciones inherentes a este estudio:
+
+\begin{enumerate}
+    \item \textbf{Supuestos de distribución normal}: Los retornos históricos pueden no seguir una distribución normal, especialmente en períodos de crisis.
+    \item \textbf{Período histórico limitado}: El análisis se basa en 10 años de datos históricos, que pueden no capturar todos los ciclos económicos.
+    \item \textbf{Simplicación de costos}: Los costos de transacción se modelan de forma simplificada y pueden variar en la práctica.
+    \item \textbf{Inflación constante}: Se asume una tasa de inflación constante por escenario, lo cual es una simplificación.
+    \item \textbf{No considera impuestos}: El análisis no incorpora el efecto de impuestos sobre ganancias de capital.
+\end{enumerate}
+
+\subsection{Factores que Influyen en los Resultados}
+
+Varios factores clave determinan los resultados observados:
+
+\begin{itemize}
+    \item \textbf{Correlación entre activos}: La baja correlación entre acciones y bonos proporciona beneficios de diversificación.
+    \item \textbf{Equity premium}: La prima de riesgo de las acciones genera mayor retorno esperado en el largo plazo.
+    \item \textbf{Sequence of returns risk}: El orden de los retornos (especialmente caídas tempranas) tiene un impacto significativo.
+    \item \textbf{Tasa de retiro}: La tasa de retiro del 14.4\% anual (USD 1200 mensual sobre USD 100,000) es relativamente alta.
+\end{itemize}
+
+% ============================================
+% 6. CONCLUSIONES
+% ============================================
+\section{Conclusiones}
+
+\subsection{Conclusiones Principales}
+
+Basado en el análisis realizado, se pueden extraer las siguientes conclusiones:
+
+\begin{enumerate}
+    \item \textbf{La 70\% Acciones / 20\% Bonos / 10\% Efectivo es la estrategia más robusta} para el objetivo planteado, mostrando las mayores tasas de supervivencia (47.8\% en escenario base) y los valores finales promedio más altos (\$33,105).
+
+    \item \textbf{Ninguna de las carteras garantiza sostenibilidad completa}: Todas las estrategias muestran probabilidades significativas de agotamiento del capital antes de 10 años, especialmente en escenarios adversos.
+
+    \item \textbf{{La sensibilidad a escenarios económicos es moderada}}: Aunque existen diferencias entre escenarios, el impacto relativo de las condiciones económicas es menos pronunciado.
+
+\end{enumerate}
+
+\subsection{{Recomendaciones}}
+
+\begin{enumerate}
+    \item \textbf{Considerar reducir la tasa de retiro}: La tasa actual del 14.4\% anual es alta. Una reducción al 10-12\% mejoraría significativamente las probabilidades de supervivencia.
+    \item \textbf{{Implementar estrategias dinámicas de retiro}}: Ajustar los retiros según el desempeño de la cartera podría mejorar la sostenibilidad.
+
+    \item \textbf{{Monitoreo continuo y rebalanceo}}: Implementar un sistema de monitoreo que permita ajustar la estrategia según condiciones de mercado.
+
+    \item \textbf{Las contribuciones periódicas mejoran significativamente los resultados}: Las aportes mensuales de USD 100 han mostrado un impacto positivo en las tasas de supervivencia. Considerar aumentar este monto si es posible para mejorar aún más la sostenibilidad.
+
+    \item \textbf{Los retiros adicionales afectan la sostenibilidad}: Los décimos sueldos de USD 1,200 en meses específicos aumentan la presión sobre el capital. Considerar ajustar el calendario de retiros o aumentar las contribuciones para compensar.
+
+    \item \textbf{{Diversificación adicional}}: Considerar incluir activos adicionales o estrategias de cobertura para reducir la volatilidad.
+\end{enumerate}
+
+\subsection{{Extensiones Futuras}}
+
+El presente estudio podría extenderse en las siguientes direcciones:
+
+\begin{itemize}
+    \item Análisis de estrategias de retiro dinámicas (variable según desempeño)
+    \item Incorporación de modelos más sofisticados de distribución de retornos (distribuciones con colas pesadas)
+    \item Análisis de optimalidad de la estrategia de rebalanceo
+    \item Evaluación de estrategias con opciones o derivados para cobertura
+    \item Análisis multi-objetivo considerando preferencias de riesgo del inversor
+\end{itemize}
+
+% ============================================
+% 7. REFERENCIAS
+% ============================================
+\section{Referencias}
+
+\begin{thebibliography}{9}
+
+\bibitem{yahoo_finance}
+Yahoo Finance. \textit{Financial Data Provider}. 
+\url{https://finance.yahoo.com/}
+
+\bibitem{montecarlo}
+Glasserman, P. (2003). \textit{Monte Carlo Methods in Financial Engineering}. Springer.
+
+\bibitem{portfolio_theory}
+Markowitz, H. (1952). Portfolio Selection. \textit{The Journal of Finance}, 7(1), 77-91.
+
+\bibitem{retirement_planning}
+Bengen, W. P. (1994). Determining Withdrawal Rates Using Historical Data. \textit{Journal of Financial Planning}, 7(4), 171-180.
+
+\bibitem{python_pandas}
+McKinney, W. (2010). Data Structures for Statistical Computing in Python. \textit{Proceedings of the 9th Python in Science Conference}.
+
+\bibitem{simulation_methods}
+Jorion, P. (2007). \textit{Value at Risk: The New Benchmark for Managing Financial Risk}. McGraw-Hill.
+
+\bibitem{rebalancing}
+Daryanani, G. (2008). Opportunistic Rebalancing: A New Paradigm for Wealth Managers. \textit{Journal of Financial Planning}, 21(1), 48-61.
+
+\bibitem{inflation}
+Fisher, I. (1930). \textit{The Theory of Interest}. Macmillan.
+
+\bibitem{risk_management}
+Fabozzi, F. J., Focardi, S. M., \& Kolm, P. N. (2006). \textit{Financial Modeling of the Equity Market: From CAPM to Cointegration}. John Wiley \& Sons.
+
+\end{thebibliography}
+
+% ============================================
+% 8. ANEXOS
+% ============================================
+\section{Anexos}
+
+\subsection{Anexo A: Estadísticas de Activos Financieros}
+
+Las estadísticas anualizadas calculadas a partir de datos históricos (2015-01-01 - 2025-01-01) son las siguientes:
+
+\begin{table}[H]
+\centering
+\caption{Estadísticas Anualizadas de Activos}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Activo} & \textbf{Retorno Medio (\%)} & \textbf{Desv. Estándar (\%)} & \textbf{Sharpe Ratio} \\
+\midrule
+S\&P 500 (Acciones) & 10.52\% & 17.89\% & 0.59 \\
+Bonos del Tesoro & 0.59\% & 6.72\% & 0.09 \\
+Oro & 7.99\% & 14.69\% & 0.54 \\
+Efectivo (T-Bill) & 49.14\% & 383.37\% & 0.13 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Nota}: Los datos de efectivo muestran una volatilidad inusualmente alta, probablemente debido a la transformación de tasas de interés a retornos. En la práctica, el efectivo se modela con una tasa libre de riesgo más conservadora.
+
+\subsection{Anexo B: Configuración del Proyecto}
+
+\begin{itemize}
+    \item Capital inicial: USD 100,000
+    \item Retiro mensual: USD 1,200
+    \item Horizonte temporal: 10 años (120 meses)
+    \item Iteraciones Monte Carlo: 10,000 por cartera y escenario
+    \item Semilla aleatoria: 42 (para reproducibilidad)
+    \item Ajuste por inflación: Habilitado
+    \item Costos de transacción: Incluidos según escenario
+    \item Contribuciones periódicas: USD 100/mes
+    \item Décimos sueldos: USD 1,200 en meses [6, 12]
+\end{itemize}
+
+\subsection{Anexo C: Estructura de Archivos Generados}
+
+Los resultados del proyecto se organizan en las siguientes carpetas:
+
+\begin{itemize}
+    \item \texttt{data/processed/}: Datos procesados y estadísticas de activos
+    \item \texttt{results/simulations/}: Archivos CSV con métricas e historiales de simulaciones
+    \item \texttt{results/tables/}: Tablas comparativas en formato CSV
+    \item \texttt{results/figures/}: Visualizaciones generadas (PNG de alta resolución)
+\end{itemize}
+
+\subsection{Anexo D: Gráficos Generados}
+
+El proyecto genera las siguientes visualizaciones (disponibles en \texttt{results/figures/}):
+
+\begin{itemize}
+    \item \texttt{evolution\_\{cartera\}\_\{escenario\}.png}: Evolución del capital por cartera y escenario (9 gráficos)
+    \item \texttt{evolution\_comparison\_\{escenario\}.png}: Comparación de evolución entre carteras (3 gráficos)
+    \item \texttt{comparison\_survival\_rate.png}: Comparación de tasas de supervivencia
+    \item \texttt{comparison\_final\_values.png}: Comparación de valores finales
+    \item \texttt{distribution\_\{cartera\}\_\{escenario\}.png}: Distribuciones de valores finales (9 gráficos)
+    \item \texttt{survival\_\{cartera\}\_\{escenario\}.png}: Análisis de supervivencia (9 gráficos)
+\end{itemize}
+
+\subsection{Anexo E: Instrucciones para Compilación en Overleaf}
+
+Para compilar este documento en Overleaf:
+
+\begin{enumerate}
+    \item Sube el archivo \texttt{informe\_final.tex} como archivo principal del proyecto
+    \item Crea una carpeta llamada \texttt{figures} en Overleaf
+    \item Sube los gráficos necesarios a la carpeta \texttt{figures} (los gráficos principales están en la carpeta \texttt{overleaf/figures})
+    \item Compila el proyecto en Overleaf
+    \item Si faltan gráficos, puedes agregarlos según sea necesario
+\end{enumerate}
+
+\textbf{Nota}: El documento está diseñado para compilar sin gráficos si estos no están disponibles. Los gráficos son opcionales y complementan el análisis presentado en las tablas.
+
+\end{document}

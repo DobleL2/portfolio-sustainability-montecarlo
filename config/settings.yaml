@@ -1,0 +1,64 @@
+project:
+  name: "Comparacion_de_Rentabilidades"
+  author: "Luis Lapo, Cristian Ojeda"
+  random_seed: 42
+  initial_capital: 100000
+  simulation_horizon_years: 10
+  withdrawals:
+    amount: 1200
+    frequency: "monthly"
+  output_dir: "results/simulations/"
+
+data_source:
+  provider: "yahoo_finance"
+  start_date: "2015-01-01"
+  end_date: "2025-01-01"
+  interval: "1d"
+  download_path: "data/raw/"
+  processed_path: "data/processed/"
+
+assets:
+  stocks: { name: "S&P 500 Index", ticker: "^GSPC" }
+  bonds:  { name: "US Treasury 7-10Y", ticker: "IEF" }
+  gold:   { name: "Gold Futures", ticker: "GC=F" }
+  cash:   { name: "3-Month Treasury Bill", ticker: "^IRX" }
+
+economic_scenarios:
+  base:         { inflation_rate: 0.02, transaction_cost: 0.002 }
+  optimistic:   { inflation_rate: 0.01, transaction_cost: 0.001 }
+  pessimistic:  { inflation_rate: 0.05, transaction_cost: 0.005 }
+
+portfolios:
+  cartera_1:
+    name: "60% Acciones / 40% Bonos"
+    allocation: { stocks: 0.6, bonds: 0.4, gold: 0.0, cash: 0.0 }
+    rebalance: { type: "time", frequency: "annual" }
+
+  cartera_2:
+    name: "50% Acciones / 30% Bonos / 20% Oro"
+    allocation: { stocks: 0.5, bonds: 0.3, gold: 0.2, cash: 0.0 }
+    rebalance: { type: "threshold", threshold: 0.05 }
+
+  cartera_3:
+    name: "70% Acciones / 20% Bonos / 10% Efectivo"
+    allocation: { stocks: 0.7, bonds: 0.2, gold: 0.0, cash: 0.1 }
+    rebalance: { type: "time", frequency: "quarterly" }
+
+simulation:
+  montecarlo_iterations: 10000
+  time_step: "monthly"
+  rebalance_cost: true
+  inflation_adjustment: true
+  compare_portfolios: true
+
+# ============================================
+# CONTRIBUCIONES O CAMBIOS EN RETIROS
+# ============================================
+contributions:
+  periodic_contribution: 100  # USD/mes adicionales (puede ser positivo para contribuciones o negativo para impuestos)
+  enabled: true  # Activar/desactivar contribuciones periódicas
+  
+withdrawal_changes:
+  thirteenth_payment_months: [6, 12]  # Meses donde se aplican "décimos" o retiros adicionales
+  thirteenth_payment_amount: 1200  # Monto del décimo sueldo (igual al retiro mensual por defecto)
+  enabled: true  # Activar/desactivar décimos sueldos
